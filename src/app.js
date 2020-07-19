@@ -2,8 +2,22 @@
 const cheerio = require('cheerio');
 const request = require('request');
 
-// cheerio query Spotify's New Music Friday playlist
-
+// scrape rapcaviar test if it works with spotify playlists
+const scrapeSpotifyRapCaviar = () => {
+    const targetUrl = "https://open.spotify.com/playlist/37i9dQZF1DX0XUsuxWHRQd";
+    request(targetUrl, (err, res, body) =>{
+        const $ = cheerio.load(body);
+        let results = [];
+        $('.name').each((i, elem) => {
+            console.log("iterate on name");
+            results[i] = {};
+            results[i]['track'] = $(elem).find('.tracklist-name').text();
+            results[i]['artist'] = $(elem).find('.tracklist-row__artist-name-link').text();
+            results[i]['album'] = $(elem).find('.tracklist-row__album-name-link').text();
+        });
+        console.log(results);
+    });
+}
 /**
  * Scrape PitchFork album reviews for Rap genre
  * Return [] conainting artist, album info for 12 most recently reviews
@@ -66,31 +80,4 @@ const checkGenre = (genreString) => {
 
 scrapePitchforkRapAlbums();
 scrapePitchforkTracks();
-
-
-
-//cheerio.load("https://open.spotify.com/playlist/37i9dQZF1DX4JAvHpjipBk");
-    // html source --  "view-source:https://open.spotify.com/playlist/37i9dQZF1DX4JAvHpjipBk"
-
-//let title = $('title').text();
-//console.log("Title: "+title);
-
-/**
- * 
- * @param {*} targetUrl 
-
-const performScrapeQuery = (targetUrl) => {
-    const regex = "\bhttps://en.wikipedia.org/wiki/+[^\s]*\b";
-    //let data = {};
-    axios.get(targetUrl).then(res = (response)=>{
-
-    }).catch(error => console.error('Error:',error));
-
-}
-$('.tracklist-row').each(function(i, elem){
-    tracks[i] = {};
-    tracks[i]['title'] = $(elem).find('.tracklist-name').text();
-    tracks[i]['artist'] = $(elem).find('.tracklist-row__artist-name-link').text();
-    tracks[i]['album'] = $(elem).find('.tracklist-row__album-name-link').text();
-});
-*/
+scrapeSpotifyRapCaviar();
