@@ -1,16 +1,19 @@
-const axios = require('axios');
+//const axios = require('axios');
 const cheerio = require('cheerio');
 
 // cheerio query Spotify's New Music Friday playlist
 const $ = cheerio.load("https://open.spotify.com/playlist/37i9dQZF1DX4JAvHpjipBk");
+    // html source --  "view-source:https://open.spotify.com/playlist/37i9dQZF1DX4JAvHpjipBk"
+
+let title = $('title').text();
+console.log("Title: "+title);
 
 let tracks = [];
-//companiesList[index]['name'] = $(header).find('[itemprop=name]').text();
-$('.name').each(function(index, trackElement){
-    tracks[index] = {};
-    tracks[index]['title'] = $(trackElement).find('.tracklist-name').text();
-    tracks[index]['artist'] = $(trackElement).find('.tracklist-row__artist-name-link').text();
-    tracks[index]['album'] = $(trackElement).find('.tracklist-row__album-name-link').text();
+$('.tracklist-row').each(function(i, elem){
+    tracks[i] = {};
+    tracks[i]['title'] = $(elem).find('.tracklist-name').text();
+    tracks[i]['artist'] = $(elem).find('.tracklist-row__artist-name-link').text();
+    tracks[i]['album'] = $(elem).find('.tracklist-row__album-name-link').text();
 });
 
 console.log(tracks);
