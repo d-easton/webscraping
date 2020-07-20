@@ -1,8 +1,36 @@
 const axios = require('axios');
 const cheerio = require('cheerio');
 const request = require('request');
+const express = require('express');
 const http = require('http');
 const fs = require('fs');
+
+require('./funcs/state.js');
+
+const app = express();
+app.use(express.static(__dirname + '/public'));
+
+// authorize app with spotify api
+var client_id = '1345146f3b604b6fa7c691e0519bc2f0'; 
+var redirect_uri = 'http://localhost:8888/login';
+
+app.get('/login', function(req, res){
+    console.log("got the log call");
+    const stateKey = 'spotify_auth_state';
+    const state = generateRandomString(16);
+    res.cookie(stateKey, state);
+  
+    // your application requests authorization
+    const scope = 'user-read-private user-read-email';
+    res.redirect('https://accounts.spotify.com/authorize?' +
+      querystring.stringify({
+        response_type: 'code',
+        client_id: client_id,
+        scope: scope,
+        redirect_uri: redirect_uri,
+        state: state
+    }));
+});
 
 // scrape rapcaviar test if it works with spotify playlists
 const scrapeSpotifyRapCaviar = () => {
@@ -87,13 +115,14 @@ scrapeSpotifyRapCaviar();
 
 
 // basic server deploy
-fs.readFile('./ui/index.html', function (err, html) {
+fs.readFile('./public/index.html', function (err, html) {
     if (err) {
         throw err; 
     }       
     http.createServer(function(request, response) {  
         response.writeHeader(200, {"Content-Type": "text/html"});  
         response.write(html);  
-        response.end();  
+        response.end();
+        console.log('Listening on 8888');  
     }).listen(8888);
 });
