@@ -1,6 +1,9 @@
-//const axios = require('axios');
+const axios = require('axios');
 const cheerio = require('cheerio');
 const request = require('request');
+let http = require('http');
+
+
 
 // scrape rapcaviar test if it works with spotify playlists
 const scrapeSpotifyRapCaviar = () => {
@@ -81,3 +84,11 @@ const checkGenre = (genreString) => {
 scrapePitchforkRapAlbums();
 scrapePitchforkTracks();
 scrapeSpotifyRapCaviar();
+
+
+// basic server deploy via http
+http.createServer(function(request, response) {
+    response.writeHead(200, {"Content-Type": "text/plain"});
+    response.write("Hello World");
+    response.end();
+}).listen(8888);
