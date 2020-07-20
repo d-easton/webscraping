@@ -1,9 +1,8 @@
 const axios = require('axios');
 const cheerio = require('cheerio');
 const request = require('request');
-let http = require('http');
-
-
+const http = require('http');
+const fs = require('fs');
 
 // scrape rapcaviar test if it works with spotify playlists
 const scrapeSpotifyRapCaviar = () => {
@@ -21,6 +20,7 @@ const scrapeSpotifyRapCaviar = () => {
         console.log(results);
     });
 }
+
 /**
  * Scrape PitchFork album reviews for Rap genre
  * Return [] conainting artist, album info for 12 most recently reviews
@@ -86,9 +86,14 @@ scrapePitchforkTracks();
 scrapeSpotifyRapCaviar();
 
 
-// basic server deploy via http
-http.createServer(function(request, response) {
-    response.writeHead(200, {"Content-Type": "text/plain"});
-    response.write("Hello World");
-    response.end();
-}).listen(8888);
+// basic server deploy
+fs.readFile('./ui/index.html', function (err, html) {
+    if (err) {
+        throw err; 
+    }       
+    http.createServer(function(request, response) {  
+        response.writeHeader(200, {"Content-Type": "text/html"});  
+        response.write(html);  
+        response.end();  
+    }).listen(8888);
+});
