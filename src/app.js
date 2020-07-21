@@ -14,7 +14,7 @@ app.use(express.static(__dirname + '/public'));
 
 // authorize app with spotify api
 var client_id = '1345146f3b604b6fa7c691e0519bc2f0'; 
-var redirect_uri = 'http://localhost:8888';
+var redirect_uri = 'http://localhost:8888/login';
 
 app.get('/login', (req, res) => {
     const stateKey = 'spotify_auth_state';
