@@ -14,7 +14,7 @@ app.use(express.static(__dirname + '/public')).use(cookieParser());;
 // authorize app with spotify api
 const client_id = '1345146f3b604b6fa7c691e0519bc2f0'; 
 const redirect_uri = 'http://localhost:8888/processLogin';
-const client_secret ='-- REDACTED --';
+const client_secret ='';
 
 // for storing login info into cookie dictionary via cookie-parser
 const stateKey = 'spotify_auth_state';
@@ -75,7 +75,7 @@ app.get('/processLogin', (req, res) => {
                     json: true
                 };
 
-                // use the access token to access the Spotify Web API
+                // Test api connect by querying for logged in user's data
                 request.get(options, function(error, response, body) {
                     console.log(body);
                 });
@@ -191,19 +191,5 @@ const generateRandomString = function(length) {
 scrapePitchforkRapAlbums();
 scrapePitchforkTracks();
 scrapeSpotifyRapCaviar();
-
-
-// basic server deploy
-// fs.readFile('./public/index.html', function (err, html) {
-//     if (err) {
-//         throw err; 
-//     }       
-//     http.createServer(function(request, response) {  
-//         response.writeHeader(200, {"Content-Type": "text/html"});  
-//         response.write(html);  
-//         response.end();
-//         console.log('Listening on 8888');  
-//     });
-// });
 
 app.listen(8888);
