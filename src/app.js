@@ -4,20 +4,22 @@ const request = require('request');
 const express = require('express');
 const http = require('http');
 const querystring = require('querystring');
-//const cookieParser = require('cookie-parser');
-const fs = require('fs');
+const cookieParser = require('cookie-parser');
 
 //import { generateRandomString} from './funcs/state.js';
 
 const app = express();
-app.use(express.static(__dirname + '/public'));
+app.use(express.static(__dirname + '/public')).use(cookieParser());;
 
 // authorize app with spotify api
-var client_id = '1345146f3b604b6fa7c691e0519bc2f0'; 
-var redirect_uri = 'http://localhost:8888/login';
+const client_id = '1345146f3b604b6fa7c691e0519bc2f0'; 
+const redirect_uri = 'http://localhost:8888/processLogin';
+const client_secret ='-- REDACTED --';
+
+// for storing login info into cookie dictionary via cookie-parser
+const stateKey = 'spotify_auth_state';
 
 app.get('/login', (req, res) => {
-    const stateKey = 'spotify_auth_state';
     const state = generateRandomString(16);
     res.cookie(stateKey, state);
   
@@ -39,8 +41,9 @@ app.get('/processLogin', (req, res) => {
     let code = req.query.code || null;
     let state = req.query.state || null;
     let storedState = req.cookies ? req.cookies[stateKey] : null;
-
-    
+    console.log("code: " +code);
+    console.log("state: " +state);
+    console.log("storedState: " +storedState);
     if (state === null || state !== storedState) {
         res.redirect('/#' +
             querystring.stringify({
