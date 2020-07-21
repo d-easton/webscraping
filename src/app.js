@@ -3,19 +3,20 @@ const cheerio = require('cheerio');
 const request = require('request');
 const express = require('express');
 const http = require('http');
+const querystring = require('querystring');
+//const cookieParser = require('cookie-parser');
 const fs = require('fs');
 
-require('./funcs/state.js');
+//import { generateRandomString} from './funcs/state.js';
 
 const app = express();
 app.use(express.static(__dirname + '/public'));
 
 // authorize app with spotify api
 var client_id = '1345146f3b604b6fa7c691e0519bc2f0'; 
-var redirect_uri = 'http://localhost:8888/login';
+var redirect_uri = 'http://localhost:8888';
 
-app.get('/login', function(req, res){
-    console.log("got the log call");
+app.get('/login', (req, res) => {
     const stateKey = 'spotify_auth_state';
     const state = generateRandomString(16);
     res.cookie(stateKey, state);
@@ -30,6 +31,67 @@ app.get('/login', function(req, res){
         redirect_uri: redirect_uri,
         state: state
     }));
+});
+
+app.get('/processLogin', (req, res) => {
+
+    // state management, based off Spotify's auth recommendations
+    let code = req.query.code || null;
+    let state = req.query.state || null;
+    let storedState = req.cookies ? req.cookies[stateKey] : null;
+
+    
+    if (state === null || state !== storedState) {
+        res.redirect('/#' +
+            querystring.stringify({
+            error: 'state_mismatch'
+        }));
+    } 
+    else {
+        res.clearCookie(stateKey);
+        const authOptions = {
+            url: 'https://accounts.spotify.com/api/token',
+            form: {
+                code: code,
+                redirect_uri: redirect_uri,
+                grant_type: 'authorization_code'
+            },
+            headers: {
+                'Authorization': 'Basic ' + (new Buffer(client_id + ':' + client_secret).toString('base64'))
+            },
+            json: true
+        };
+
+        request.post(authOptions, function(error, response, body) {
+            if (!error && response.statusCode === 200) {
+                const access_token = body.access_token, refresh_token = body.refresh_token;
+
+                var options = {
+                    url: 'https://api.spotify.com/v1/me',
+                    headers: { 'Authorization': 'Bearer ' + access_token },
+                    json: true
+                };
+
+                // use the access token to access the Spotify Web API
+                request.get(options, function(error, response, body) {
+                    console.log(body);
+                });
+
+                // we can also pass the token to the browser to make requests from there
+                res.redirect('/#' +
+                    querystring.stringify({
+                        access_token: access_token,
+                        refresh_token: refresh_token
+                }));
+            }
+            else {
+                res.redirect('/#' +
+                querystring.stringify({
+                    error: 'invalid_token'
+                }));
+            }
+        });
+    }
 });
 
 // scrape rapcaviar test if it works with spotify playlists
@@ -108,6 +170,20 @@ const checkGenre = (genreString) => {
     return foundMatch;
 } 
 
+/**
+ * Generates random string w/ numbers and letters -- here for now but should move to support doc
+ * @param  {number} length of string to generate
+ * @return {string} string with randomized letters and numbers
+ */
+const generateRandomString = function(length) {
+    let buildRandomString = '';
+    const possibleChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    for (var i = 0; i < length; i++) {
+        buildRandomString += possibleChars.charAt(Math.floor(Math.random() * possibleChars.length));
+    }
+    return buildRandomString;
+};
+
 
 scrapePitchforkRapAlbums();
 scrapePitchforkTracks();
@@ -115,14 +191,16 @@ scrapeSpotifyRapCaviar();
 
 
 // basic server deploy
-fs.readFile('./public/index.html', function (err, html) {
-    if (err) {
-        throw err; 
-    }       
-    http.createServer(function(request, response) {  
-        response.writeHeader(200, {"Content-Type": "text/html"});  
-        response.write(html);  
-        response.end();
-        console.log('Listening on 8888');  
-    }).listen(8888);
-});
+// fs.readFile('./public/index.html', function (err, html) {
+//     if (err) {
+//         throw err; 
+//     }       
+//     http.createServer(function(request, response) {  
+//         response.writeHeader(200, {"Content-Type": "text/html"});  
+//         response.write(html);  
+//         response.end();
+//         console.log('Listening on 8888');  
+//     });
+// });
+
+app.listen(8888);
