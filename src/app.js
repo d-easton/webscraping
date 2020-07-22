@@ -41,9 +41,7 @@ app.get('/processLogin', (req, res) => {
     let code = req.query.code || null;
     let state = req.query.state || null;
     let storedState = req.cookies ? req.cookies[stateKey] : null;
-    console.log("code: " +code);
-    console.log("state: " +state);
-    console.log("storedState: " +storedState);
+ 
     if (state === null || state !== storedState) {
         res.redirect('/#' +
             querystring.stringify({
@@ -69,15 +67,45 @@ app.get('/processLogin', (req, res) => {
             if (!error && response.statusCode === 200) {
                 const access_token = body.access_token, refresh_token = body.refresh_token;
 
-                var options = {
-                    url: 'https://api.spotify.com/v1/me',
+                // const options = {
+                //     url: 'https://api.spotify.com/v1/me',
+                //     headers: { 'Authorization': 'Bearer ' + access_token },
+                //     json: true
+                // };
+
+                // // Test api connect by querying for logged in user's data
+                // request.get(options, function(error, response, body) {
+                //     console.log(body);
+                // });
+
+                const options = {
+                    url: 'https://api.spotify.com/v1/playlists/37i9dQZF1DX4JAvHpjipBk/tracks',
                     headers: { 'Authorization': 'Bearer ' + access_token },
                     json: true
-                };
-
-                // Test api connect by querying for logged in user's data
+                }
+              
+                // Fetch from New Music Friday Playlist on Spotify
                 request.get(options, function(error, response, body) {
-                    console.log(body);
+                    let trackObjects = body['items'];
+                    for(let trackNumber in trackObjects){
+                        if (trackObjects.hasOwnProperty(trackNumber)){
+                            let playlistTrack=trackObjects[trackNumber];
+                            if (playlistTrack.hasOwnProperty('track')){
+                                let track = playlistTrack['track']
+                                let trackName = track['name'];
+                                let artistNames = '';
+                                //let artistGenre = track['artists'][0]['genres'][0];
+                                for ( let artist in track['artists']){
+                                    if (track['artists'].hasOwnProperty(artist)){
+                                        let artists=track['artists'][artist];
+                                        artistNames += artists['name']+" ";
+                                        //artists['g']
+                                    }
+                                }
+                                console.log(trackNumber+": "+trackName+ ' by ' +artistNames);
+                            }
+                        }
+                    }
                 });
 
                 // we can also pass the token to the browser to make requests from there
