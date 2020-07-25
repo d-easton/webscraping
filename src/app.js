@@ -99,7 +99,6 @@ app.get('/processLogin', (req, res) => {
                                     if (track['artists'].hasOwnProperty(artist)){
                                         let artists=track['artists'][artist];
                                         artistNames += artists['name']+" ";
-                                        //artists['g']
                                     }
                                 }
                                 console.log(trackNumber+": "+trackName+ ' by ' +artistNames);

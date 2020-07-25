@@ -1,0 +1,38 @@
+{
+  "name": "webscraping",
+  "version": "1.0.0",
+  "description": "I created this simple app to help me keep up with newly released hip-hop music. As the hip-hop director for my college's radio station, I'm responsible for kcompiling and distributing new release info to all of our DJs. I saw automating my information gathering process as a way to streamline and speed up my work.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "index.js",
+    "db_off": "killall mongod",
+    "watch": "nodemon index.js",
+    "db_on": "mkdir -p ./db && mongod --dbpath ./db",
+    "lint": "eslint ./"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/d-easton/webscraping.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/d-easton/webscraping/issues"
+  },
+  "homepage": "https://github.com/d-easton/webscraping#readme",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "http-errors": "^1.8.0",
+    "mongoose": "^5.9.25",
+    "superagent": "^5.3.1"
+  },
+  "devDependencies": {
+    "eslint": "^7.5.0",
+    "jest": "^26.1.0"
+  }
+}
