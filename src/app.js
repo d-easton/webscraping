@@ -1,16 +1,16 @@
 'use strict'
 
-const axios = require('axios');
+//const axios = require('axios');
 const cheerio = require('cheerio');
 const request = require('request');
 const express = require('express');
-const http = require('http');
-const querystring = require('querystring');
+const cors = require('cors');
 const cookieParser = require('cookie-parser');
 
 const spotify = require('./route/spotifyLogin.route');
 
 const app = express();
+app.use(cors());
 app.use(express.static(__dirname + '/public')).use(cookieParser());;
 app.use('/', spotify);
 

@@ -7,10 +7,13 @@ const querystring = require('querystring');
 const request = require('request');
 const cookieParser = require('cookie-parser');
 
+const generateRandomString = require('../support/funcs');
+const spotifyAuthInfo = require('../support/constants');
+
 // authorize app with spotify api
-const client_id = '1345146f3b604b6fa7c691e0519bc2f0'; 
-const redirect_uri = 'http://localhost:8888/processLogin';
-const client_secret ='';
+const client_id = spotifyAuthInfo['client_id']; 
+const redirect_uri = spotifyAuthInfo['redirect_uri']; 
+const client_secret = spotifyAuthInfo['client_secret']; 
 
 // for storing login info into cookie dictionary via cookie-parser
 const stateKey = 'spotify_auth_state';
@@ -119,19 +122,5 @@ spotifyRouter.get('/processLogin', (req, res) => {
         });
     }
 });
-
-/**
- * Generates random string w/ numbers and letters -- here for now but should move to support doc
- * @param  {number} length of string to generate
- * @return {string} string with randomized letters and numbers
- */
-const generateRandomString = function(length) {
-    let buildRandomString = '';
-    const possibleChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    for (var i = 0; i < length; i++) {
-        buildRandomString += possibleChars.charAt(Math.floor(Math.random() * possibleChars.length));
-    }
-    return buildRandomString;
-};
 
 module.exports = spotifyRouter;
