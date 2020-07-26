@@ -7,7 +7,7 @@ const querystring = require('querystring');
 const request = require('request');
 const cookieParser = require('cookie-parser');
 
-const generateRandomString = require('../support/funcs');
+const funcs = require('../support/funcs');
 const spotifyAuthInfo = require('../support/constants');
 
 // authorize app with spotify api
@@ -19,7 +19,7 @@ const client_secret = spotifyAuthInfo['client_secret'];
 const stateKey = 'spotify_auth_state';
 
 spotifyRouter.get('/login', (req, res) => {
-    const state = generateRandomString(16);
+    const state = funcs.generateRandomString(16);
     res.cookie(stateKey, state);
   
     // your application requests authorization
