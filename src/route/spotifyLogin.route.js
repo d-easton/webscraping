@@ -8,12 +8,12 @@ const request = require('request');
 const cookieParser = require('cookie-parser');
 
 const funcs = require('../support/funcs');
-const spotifyAuthInfo = require('../support/constants');
+const constants = require('../support/constants');
 
 // authorize app with spotify api
-const client_id = spotifyAuthInfo['client_id']; 
-const redirect_uri = spotifyAuthInfo['redirect_uri']; 
-const client_secret = spotifyAuthInfo['client_secret']; 
+const client_id = constants['spotify']['client_id']; 
+const redirect_uri = constants['spotify']['redirect_uri']; 
+const client_secret = constants['spotify']['client_secret']; 
 
 // for storing login info into cookie dictionary via cookie-parser
 const stateKey = 'spotify_auth_state';

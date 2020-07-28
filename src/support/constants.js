@@ -6,4 +6,12 @@ const spotifyAuth = {
     'client_secret': ''
 }
 
-module.exports = spotifyAuth;
+const links = {
+    'xxlWeeky': 'https://www.xxlmag.com/best-new-songs-drake-gunna-sada-baby/',
+}
+
+
+module.exports =  {
+    "spotify": spotifyAuth, 
+    "links": links
+};

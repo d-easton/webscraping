@@ -9,7 +9,6 @@ const funcs = require('../support/funcs');
  * Return [] conainting artist, track, genre info for ?? most recently reviews
  */
 const scrapePitchforkTracks = () => {
-    console.log("TESTY!");
     const targetUrl = "https://pitchfork.com/reviews/tracks/?page=1";
     request(targetUrl, (err, res, body) =>{
         const $ = cheerio.load(body);

@@ -9,6 +9,7 @@ const cookieParser = require('cookie-parser');
 
 const spotify = require('./route/spotifyLogin.route');
 const pitchfork = require('./scraping/pitchfork');
+const xxl = require('./scraping/xxl');
 
 const app = express();
 app.use(cors());
@@ -17,5 +18,8 @@ app.use('/', spotify);
 
 pitchfork.trackReviews();
 pitchfork.rapAlbums();
+
+xxl.yearlyReviews();
+xxl.weeklyReviews();
 
 app.listen(8888);
