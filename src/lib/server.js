@@ -17,7 +17,7 @@ mongoose.Promise = Promise;
 mongoose.connect(MONGODB_URI);
 
 // configure express routing
-app.use(bodyParser.json(),cors());
+app.use(bodyParser.json(), cors());
 app.use(require('../route/auth-router'));
 
 // fall through
