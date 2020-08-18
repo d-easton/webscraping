@@ -1,8 +1,8 @@
 const goose = require('./mongooseConnect.js');
 
 const trackDocument = {
-    "title": "Breathe In Breathe Out",
-    "artists": ["Kanye West"],                                                                                                                             
+    "title": "Chum",
+    "artists": ["Earl Sweatshirt"],                                                                                                                             
     "published": new Date(2020, 1, 1),                                                                                                                            
     "scraped": Date.now(),
     "genre": "Rap"
