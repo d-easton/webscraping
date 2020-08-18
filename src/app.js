@@ -22,13 +22,17 @@ app.use('/', spotify);
 app.use('/scraping', scrape)
 
 const trackReviews = pitchfork.trackReviews();
-pitchforkDB().catch(console.dir);
+console.log("TRACK REVIEWS::");
+console.log(typeof(trackReviews));
+console.log(trackReviews);
+// pitchforkDB.insert
+// .catch(console.dir);
 
 
 
-pitchfork.rapAlbums();
+// pitchfork.rapAlbums();
 
-xxl.yearlyReviews();
-xxl.weeklyReviews();
+// xxl.yearlyReviews();
+// xxl.weeklyReviews();
 
 app.listen(8888);
